@@ -18,16 +18,21 @@ export const CartProvider = ({ children }) => {
     }, []);
 
     const allCarts = () => carts;
-    const activeCarts = () => carts.filter((item) => item.active);
-    const inactiveCarts = () => carts.filter((item) => !item.active);
+    const activeCarts = () => carts.filter((item) => item.isActive);
+    const inactiveCarts = () => carts.filter((item) => !item.isActive);
 
     const remove = (id) => {
         setCarts((prev) => prev.filter((item) => item.id !== id))
     };
 
+    const toggleButton = (id) => {
+        setCarts((prev) => prev.map((item) => item.id === id ? { ...item, isActive: !item.isActive } : item))
+    }
+
     return (
         <CartContext.Provider
             value={{
+                toggleButton,
                 carts,
                 allCarts,
                 activeCarts,

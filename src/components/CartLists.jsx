@@ -10,18 +10,17 @@ const CartLists = () => {
         activeCarts,
         inactiveCarts,
         remove,
+        toggleButton
     } = useCart();
     const [displayItem, setDisplayItem] = useState([]);
 
     useEffect(() => {
         setDisplayItem(carts)
-    }, [carts])
+    }, [carts]);
 
-    const all = () => {
-        allCarts();
-    }
-    const activeItems = activeCarts(); // call once 
-    const inactive = inactiveCarts();
+    const all = () => setDisplayItem(carts);
+    const activeItems = () => setDisplayItem(activeCarts()); // call once 
+    const inactive = () => setDisplayItem(inactiveCarts());
 
 
     const tabs = [
@@ -51,19 +50,36 @@ const CartLists = () => {
             </div>
             {/* carts  */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-center lg:px-28 py-10 min-h-20">
-                {carts.map((item) => (
+                {displayItem.map((item) => (
                     <div
                         key={item.id}
                         className="bg-gray-800 rounded-2xl w-full h-[200px] py-5 text-white px-10"
                     >
                         <img src={item.logo} alt={item.name} className="h-10" />
                         <h1 className="text-lg font-semibold">{item.name}</h1>
-                        <p className="text-sm mt-2">{item.description}</p>
+                        <p className="text-sm mt-2 ">{item.description}</p>
                         <div className="flex justify-between py-4">
-                                <button 
-                                onClick={()=> remove(item.id)}
+                            <button
+                                onClick={() => remove(item.id)}
                                 className="px-4 py-2 bg-gray-700 rounded-3xl hover:bg-gray-600">Remove</button>
-                            <button>toogle</button>
+                            {/* Hidden checkbox */}
+                            <label className="relative inline-block w-[60px] h-[34px]">
+                                <input
+                                    type="checkbox"
+                                    className="opacity-0 w-0 h-0 peer hidden"
+                                    checked={item.isActive}
+                                    onChange={() => toggleButton(item.id)}
+                                />
+                                <span
+                                    className={`absolute cursor-pointer top-0 left-0 right-0 bottom-0
+                                            bg-gray-300 peer-checked:bg-red-500 transition duration-300 rounded-full`}>
+
+                                </span>
+
+                                <span className={`absolute content-[''] h-[26px] w-[26px] left-[4px] bottom-[4px] bg-white transition duration-300 rounded-full peer-checked:translate-x-[26px]`}
+                                ></span>
+                            </label>
+
                         </div>
                     </div>
                 ))}
